@@ -6,7 +6,7 @@ window.React = React
 
 const router = createBrowserRouter( Object.keys( exports.config ).map( path => {
   const Component = exports[ exports.config[ path ] ]
-  return { path, element: <Component { ...{ useEffect, useState, useNavigate } } /> }
+  return { path: path == '/' ? '*' : path , element: <Component { ...{ useEffect, useState, useNavigate } } /> }
 } )  )
 
 const root = createRoot( document.getElementById( "root") )
