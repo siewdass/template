@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider, useNavigate } from "react-router-d
 
 window.React = React
 
-const useFetch = async ( method, url, data, header = { 'Content-Type': 'application/json' } ) => {
+const useFetch = async ( method, url, data, headers = { 'Content-Type': 'application/json' } ) => {
   const response = await fetch( method == 'GET' ? `${ url }?${ new URLSearchParams( data ) }` : url, {
     method,
     headers,
