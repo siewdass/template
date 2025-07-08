@@ -1,0 +1,25 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.11",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router": "^7.6.2",
+    "tailwindcss": "^4.1.11"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.10",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.21",
+    "@vitejs/plugin-react": "^4.4.1",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5"
+  }
+}
