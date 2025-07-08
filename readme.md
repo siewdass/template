@@ -5,7 +5,6 @@ BACKEND
 - hat
 - sequelize
 - sequelize-paginate-helper
-------
 - catalog > custom
 - auth > express-jwt > config
 - cors > custom > prod/stag>dev
@@ -19,7 +18,6 @@ FRONTEND
 - zunstand
 - @tanstack/react-query
 - shadcn
-------
 - auth > custom + zustand
 - fetch > custom
 - error handler
