@@ -5,26 +5,35 @@ import { expressjwt, UnauthorizedError } from 'express-jwt'
 
 interface Boostrap {
     origin?: string
-    open: string[]
-    secret: string
+    exposed?: string[]
+    secret?: string
     headers?: string[]
+    authorization?: {
+        exposed?: string[]
+        secret: string
+    }
 }
 
-export const Bootstrap = async ( { origin, open, secret }: Boostrap ) => {
+export const Bootstrap = async ( { origin, authorization }: Boostrap ) => {
+    const prod = (import.meta as any).env.MODE === 'production'
+
     const app = express()
 
-    app.use(cors({ origin }))
+    app.use(cors({ origin: prod && origin ? origin : '*' }))
     app.use(express.json())
 
-    const nonprotected = open.map(p =>p.includes(':') ? new RegExp('^' + p.replace(/:[^/]+/g, '[^/]+') + '$') : p)
+    if ( authorization && authorization?.secret ) {
+        const exposed = authorization?.exposed?.map(p => p.includes(':') ? new RegExp('^' + p.replace(/:[^/]+/g, '[^/]+') + '$') : p) || []
+        const secret = authorization.secret
 
-    app.use(expressjwt({ secret, algorithms: ['HS256'] }).unless({ path: nonprotected }));
-    app.use(((err, req, res, next) => {
-        if (err instanceof UnauthorizedError) {
-            return res.status(401).json({ error: true, message: 'Invalid token' })
-        }
-        next(err)
-    }) as ErrorRequestHandler)
+        app.use(expressjwt({ secret, algorithms: ['HS256'] }).unless({ path: exposed }));
+        app.use(((err, req, res, next) => {
+            if (err instanceof UnauthorizedError) {
+                return res.status(401).json({ error: true, message: 'Invalid token' })
+            }
+            next(err)
+        }) as ErrorRequestHandler)
+    }
 
     const files = (import.meta as any).glob('../src/**/*.{ts,js}', { eager: true })
 

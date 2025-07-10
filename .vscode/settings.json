@@ -1,7 +1,10 @@
 {
+    "editor.tabSize": 2,
+	"editor.insertSpaces": false,
     "files.exclude": {
         "**/node_modules": true,
         "**/dist": true,
-        "**/yarn.lock": true
+        "**/yarn.lock": true,
+        "**/package-lock.json": true
     }
 }

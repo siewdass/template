@@ -1,8 +1,22 @@
-import { StrictMode } from 'react'
+import { ReactNode, StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider, Navigate, useRouteError, useNavigate, useParams, useLocation } from 'react-router'
+import { createBrowserRouter, RouterProvider, Navigate, useRouteError, Outlet } from 'react-router'
+import { PrimeReactProvider } from 'primereact/api';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+import 'primeicons/primeicons.css';
 
-export const Bootstrap = async ( {}: any ) => {
+interface Bootstrap {
+  theme?: string
+  layout?: React.ComponentType<{ children: ReactNode }>
+  authorization?: {
+    exposed: string[]
+  }
+}
+
+export const Bootstrap = async ({ layout: Layout, authorization }: Bootstrap) => {
+  const queryClient = new QueryClient()
+
   const RouterErrorFallback = () => {
     const { stack } = useRouteError() as Error;
     return <>File error: {stack?.match(/(src\/.*?\.(jsx|tsx|js|ts))/)?.[0]}</>
@@ -10,37 +24,47 @@ export const Bootstrap = async ( {}: any ) => {
 
   const files = (import.meta as any).glob('../src/**/*.{tsx,jsx}', { eager: true });
 
-  const router = createBrowserRouter([{
-    path: '/',
-    errorElement: <RouterErrorFallback />,
-    children: [
-      ...Object.entries(files)
-      .filter(([_, module]: any) => typeof (module as any).default === 'function')
-      .map(([route, module]) => {
-        const path = route
-            .replace(/^\.{0,2}\/src\//, '')        // ../src/ → ''
-            .replace(/(?:\/index)?\.(tsx|jsx)$/, '') // quita .ts/.js y opcional /index
-            .replace(/\[([^\]]+)]/g, ':$1')        // [id] → :id
-            .replace(/\/+$/, '')                   // barra final
-            .replace('index', '')
-            .toLowerCase() || '/';
+  const allRoutes = Object.entries(files)
+    .filter(([_, module]: any) => typeof (module as any).default === 'function')
+    .map(([route, module]) => {
+      const Element = (module as any).default
+      const path = route
+      .replace(/^\.{0,2}\/src\//, '')          // ../src/ → ''
+      .replace(/(?:\/index)?\.(tsx|jsx)$/, '') // quita .ts/.js y opcional /index
+      .replace(/\[([^\]]+)]/g, ':$1')          // [id] → :id
+      .replace(/\/+$/, '')                     // barra final
+      .replace('index', '')
+      .toLowerCase() || '/';
 
-        console.log(path)
-        const MyRoute = (module as any).default
+      return { path, element: <Element /> }
+    })
 
-        const Wrapper = () => {   
-          return <MyRoute params={useParams()} navigate={useNavigate()} location={useLocation()} />
-        }
+  const withs = allRoutes.filter(({path}) => !authorization?.exposed.includes(path))
+  const withouts = allRoutes.filter(({path}) => authorization?.exposed.includes(path))
 
-        return { path, Component: Wrapper }
-      }),
-      { path: '*', element: <Navigate to="/" replace /> }
-    ]
-  }])
+  const router = createBrowserRouter([
+    {
+      errorElement: <RouterErrorFallback />,
+      children: withouts.map(({path, element}) => ({ path, element }))
+    },
+    {
+      element: Layout ? <Layout><Outlet /></Layout> : <Outlet />,
+      errorElement: <RouterErrorFallback />,
+      children: withs.map(({path, element}) => ({ path, element }))
+    },
+    {
+      path: '*',
+      element: <Navigate to="/" replace />
+    }
+  ])
 
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
-      <RouterProvider router={router} />
+      <PrimeReactProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </PrimeReactProvider>
     </StrictMode>
   )
 

@@ -1,15 +1,51 @@
-@import "tailwindcss";
-
 html, body {
-  margin: 0px;
+    font-size: 14px;
+    padding: 0px;
+    margin: 0px;
 }
 
-#root {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: black;
-  color: white;
-  width: 100%;
-  height: 100svh;
+.nospacing {
+    margin: 0px;
+    padding: 0px;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.p-panelmenu .p-panelmenu-header .p-panelmenu-header-content {
+    border: none;
+}
+
+.p-panelmenu .p-panelmenu-content {
+    border: none;
+    padding: 0px;
+}
+
+.p-float-label:has(input:focus) label,
+.p-float-label:has(input.p-filled) label,
+.p-float-label:has(input:-webkit-autofill) label,
+.p-float-label:has(textarea:focus) label,
+.p-float-label:has(textarea.p-filled) label,
+.p-float-label:has(.p-inputwrapper-focus) label,
+.p-float-label:has(.p-inputwrapper-filled) label {
+    top: .01rem;
+    font-size: 0.65rem;
+    background-color: white;
+    padding: 3px;
+}
+
+.p-float-label label {
+    top: 50%;
+    margin-top: -.5rem;
+}
+
+.floating-error {
+    position: absolute;
+    font-size: 0.65rem;
+    color: #f87171;
+    right: 0.6rem;
+    bottom: -1.15rem;
+    background: white;
+    padding: 3px
 }

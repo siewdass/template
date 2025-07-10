@@ -1,4 +1,4 @@
-import { Model, INTEGER, STRING } from '../util/database';
+import { Model, INTEGER, STRING } from '../../lib/database';
 
 export const User = Model('User',
   {
