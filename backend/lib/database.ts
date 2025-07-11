@@ -32,3 +32,13 @@ export const Paginate = async (options: Pagination) => {
   const p = await sph(model, page, limit, order, sort, attributes, where, filters, includes, 'id')
   return { items: p.data, total: p.totalRecords }
 }
+
+
+export async function initialize() {
+  try {
+    await database.sync({ force: true });
+    console.log('Database & tables created!');
+  } catch (error) {
+    console.error('Failed to sync database:', error);
+  }
+}

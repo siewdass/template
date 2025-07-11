@@ -1,28 +1,27 @@
 BACKEND
-- functional programing > express ✅ 
-- jsonwebtoken 
-- cors ✅
-- database > sequelize ✅
+- functional programming > express ✅
+- file based routing > express ✅
+- jsonwebtoken
+- origin only on prod > cors ✅
+- database > sequelize connector ⏳
 - pagination endpoints > sequelize-paginate-helper ✅
 - catalog > custom
-- auth > express-jwt > config ✅
-- cors > custom > prod/stag>dev
-- database connector????? file main or config
+- authorization middleware > express-jwt ✅
 - transaction generator and autorollback?
-- environment variables
 
 FRONTEND
-- functional programing > react ✅
+- functional programming > react ✅
 - file based routing > react-router ✅
-- auto validate inputs > react-hook-form ⏳
-- zunstand
-- @tanstack/react-query
-- components > primereact ⏳
-- auth > custom + zustand
-- fetch > custom
+- hook and inputs validations > react-hook-form ✅
+- caching requests > @tanstack/react-query ⏳
+- authorization with layout > zustand ⏳
+- fetch > custom con interceptor para auth
 - error handler ✅
 - table pagination ✅
 - toast > fetch
+- grid system
+- theme swicher
+- zunstand
 
 COMMON
 - zod
@@ -32,3 +31,4 @@ COMMON
 - alias import
 - eslint compilation checks
 - expose
+- environment variables

@@ -2,6 +2,7 @@ import express, { ErrorRequestHandler } from 'express'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import { expressjwt, UnauthorizedError } from 'express-jwt'
+import { initialize } from './database'
 
 interface Boostrap {
     origin?: string
@@ -15,6 +16,8 @@ interface Boostrap {
 }
 
 export const Bootstrap = async ( { origin, authorization }: Boostrap ) => {
+    initialize()
+    
     const prod = (import.meta as any).env.MODE === 'production'
 
     const app = express()
@@ -58,13 +61,13 @@ export const Bootstrap = async ( { origin, authorization }: Boostrap ) => {
             res.status(200).json(
                 await (module as any).default(req)
             )
-            } catch (error: any) {
-            console.error(`${path} ${error.message}`, )
+        } catch (error: any) {
+            console.error(`error ${path} ${error.message}`, )
             res.status(error.statusCode || 500).json({
                 error: true,
                 message: error.message || 'An unexpected error occurred'
             })
-            }
+        }
         })
     });
 

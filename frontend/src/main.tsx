@@ -5,6 +5,7 @@ import './style.css'
 export const app = Bootstrap({
 	layout: Layout,
 	authorization: {
-    exposed: ['/']
+    exposed: ['/'] // redirect
   }
 })
+//'http://localhost:3001' environment variables

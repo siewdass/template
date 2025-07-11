@@ -1,19 +1,31 @@
 import { useQuery as query, UseQueryResult } from '@tanstack/react-query'
-//export { UseQueryResult } from '@tanstack/react-query'
 
 const api = 'http://localhost:3001'
 
-export const Fetch = async (endpoint: string, params: any) => {
-  const query = new URLSearchParams(params).toString()
+interface FetchProps {
+  method: string
+  endpoint: string 
+  params: any
+}
 
-  const response = await fetch(`${api}${endpoint}?${query}`)
-  
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
+export const Fetch = async ({ method, endpoint, params }: FetchProps) => {
+  const headers = { 'Content-Type': 'application/json' };
+  const config: RequestInit = { method, headers };
+
+  if (method === 'GET') {
+    endpoint += `?${new URLSearchParams(params).toString()}`;
+  } else  {
+    config.body = JSON.stringify(params);
   }
 
-  return await response.json()
-}
+  const response = await fetch(`${api}${endpoint}`, config);
+  
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
+};
 
 interface Query {
   key: string
@@ -29,6 +41,6 @@ interface Paginator {
 export const useQuery = <T = any>({ key, endpoint, params }: Query, deps: any[] = []): UseQueryResult<Paginator> => {
   return query({
     queryKey: [ key, ...deps ],
-    queryFn: () => Fetch( endpoint, params ),
+    queryFn: () => Fetch( { method: 'GET', endpoint, params } ),
   })
 }

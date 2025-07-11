@@ -1,5 +1,5 @@
-import { useAuth } from '../lib/auth'
-import { useCustomForm, Form, Input } from './components/form'
+import { useAuth } from '../../lib/auth'
+import { useCustomForm, Form, Input } from '../components/form'
 
 export default function Page() {
   const { login } = useAuth()
@@ -9,7 +9,7 @@ export default function Page() {
     password: { label: 'Contrasena', type: 'password', required: true },
   })
 
-  const onSubmit = (e: any) => console.log(e)
+  const onSubmit = (e: any) => login(e)
   
   return (
     <Form form={myform} onSubmit={onSubmit}>
