@@ -40,6 +40,7 @@ html, body {
     margin-top: -.5rem;
 }
 
+/* floating error */
 .floating-error {
     position: absolute;
     font-size: 0.65rem;
@@ -48,4 +49,9 @@ html, body {
     bottom: -1.15rem;
     background: white;
     padding: 3px
+}
+
+/* remove extra size in password input */
+.p-icon-field-right > .p-inputtext {
+    padding-right: .8rem;
 }

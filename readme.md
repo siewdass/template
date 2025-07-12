@@ -1,27 +1,27 @@
 BACKEND
 - functional programming > express ✅
 - file based routing > express ✅
-- jsonwebtoken
+- authorization sign in and up > jsonwebtoken bcrypt ⏳
 - origin only on prod > cors ✅
 - database > sequelize connector ⏳
 - pagination endpoints > sequelize-paginate-helper ✅
-- catalog > custom
+- crud builder ✅
 - authorization middleware > express-jwt ✅
-- transaction generator and autorollback?
+- transaction generator and autorollback ⏳
+- validations > zod 
 
 FRONTEND
 - functional programming > react ✅
 - file based routing > react-router ✅
 - hook and inputs validations > react-hook-form ✅
 - caching requests > @tanstack/react-query ⏳
-- authorization with layout > zustand ⏳
-- fetch > custom con interceptor para auth
+- authorization with redirection > zustand ✅
+- layout with excluded routes ✅
+- fetch with toast ✅
 - error handler ✅
-- table pagination ✅
-- toast > fetch
+- table pagination ⏳
 - grid system
 - theme swicher
-- zunstand
 
 COMMON
 - zod
@@ -30,5 +30,5 @@ COMMON
 - pnpm ✅
 - alias import
 - eslint compilation checks
-- expose
 - environment variables
+- request and response interfaces quizas con con un object

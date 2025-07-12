@@ -1,4 +1,6 @@
-import { useQuery as query, UseQueryResult } from '@tanstack/react-query'
+import { useQuery as reactQuery, UseQueryResult } from '@tanstack/react-query'
+import { useToast } from './toast';
+import { useEffect } from 'react';
 
 const api = 'http://localhost:3001'
 
@@ -9,6 +11,7 @@ interface FetchProps {
 }
 
 export const Fetch = async ({ method, endpoint, params }: FetchProps) => {
+  // agregar token y falta darle utilidad al use fetch
   const headers = { 'Content-Type': 'application/json' };
   const config: RequestInit = { method, headers };
 
@@ -18,14 +21,14 @@ export const Fetch = async ({ method, endpoint, params }: FetchProps) => {
     config.body = JSON.stringify(params);
   }
 
-  const response = await fetch(`${api}${endpoint}`, config);
-  
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+  let response 
+  try {
+    response = await fetch(`${api}${endpoint}`, config);
+    return await response.json();
+  } catch (error) {
+    console.log('catch',error)  
   }
-
-  return response.json();
-};
+}
 
 interface Query {
   key: string
@@ -39,8 +42,18 @@ interface Paginator {
 }
 
 export const useQuery = <T = any>({ key, endpoint, params }: Query, deps: any[] = []): UseQueryResult<Paginator> => {
-  return query({
+  const { show } = useToast();
+
+  const query = reactQuery({
     queryKey: [ key, ...deps ],
     queryFn: () => Fetch( { method: 'GET', endpoint, params } ),
   })
+
+  useEffect(() => {
+    if (query.error) {
+      show()
+    }
+  }, [query.error])
+
+  return query
 }

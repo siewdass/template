@@ -1,8 +1,8 @@
 import express, { ErrorRequestHandler } from 'express'
+import { Transaction } from 'sequelize'
 import cors from 'cors'
-import jwt from 'jsonwebtoken'
 import { expressjwt, UnauthorizedError } from 'express-jwt'
-import { initialize } from './database'
+import { Connect, database } from './database'
 
 interface Boostrap {
     origin?: string
@@ -15,9 +15,9 @@ interface Boostrap {
     }
 }
 
+Connect()
+
 export const Bootstrap = async ( { origin, authorization }: Boostrap ) => {
-    initialize()
-    
     const prod = (import.meta as any).env.MODE === 'production'
 
     const app = express()
@@ -50,24 +50,28 @@ export const Bootstrap = async ( { origin, authorization }: Boostrap ) => {
             .replace(/\/+$/, '')                   // barra final
             .replace('index', '')
             .toLowerCase() || '/';
-
         return { path, module: m };
     }).sort((a, b) => (a.path.includes(':') ? 1 : -1));
 
     routes.forEach(({ path, module }) => {
-    app.all(path, async (req, res) => {
-        try {
-            console.log(`${path} ${JSON.stringify(req.body || req.query)}` )
-            res.status(200).json(
-                await (module as any).default(req)
-            )
-        } catch (error: any) {
-            console.error(`error ${path} ${error.message}`, )
-            res.status(error.statusCode || 500).json({
-                error: true,
-                message: error.message || 'An unexpected error occurred'
-            })
-        }
+        app.all(path, async (req, res) => {
+            const transaction = await database.transaction()
+            try {
+                console.log(`${path} ${JSON.stringify(req.body || req.query)}` )
+                const response = await (module as any).default(req, transaction)
+                await transaction.commit()
+                res.status(200).json(response)
+            } catch (error: any) {
+                if (!(transaction as any).finished) await transaction.rollback()
+                console.error(`error ${path}`, error);
+                const status = error.statusCode || error.status || 500;
+                res.status(status).json({
+                    error: true,
+                    message: error.message || 'An unexpected error occurred',
+                    // Include any additional error details
+                    ...(error.details && { details: error.details })
+                });
+            }
         })
     });
 

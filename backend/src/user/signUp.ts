@@ -2,7 +2,7 @@ import { Request } from 'express';
 import { User } from './model';
 import bcrypt from 'bcrypt';
 
-export default async function signIn(req: Request) {
+export default async function signUp(req: Request) {
   const { name, email, password } = req.body;
   
   // Basic validation

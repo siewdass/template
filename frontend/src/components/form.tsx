@@ -6,6 +6,9 @@ import { Password } from 'primereact/password';
 import { InputMask } from 'primereact/inputmask';
 import { Calendar } from 'primereact/calendar';
 
+import { memo } from 'react';
+import { Controller, useFormState } from 'react-hook-form';
+
 import { createContext, useContext, ReactNode } from 'react';
 import { useForm, UseFormReturn, FieldValues } from 'react-hook-form';
 
@@ -63,52 +66,98 @@ export const Form = ({ form, children, onSubmit }: FormProps) => (
   </FormContext.Provider>
 );
 
-export const Input = ({ id }: InputProps) => {
+export const Input = memo(({ id }: InputProps) => {
   const { form, validations } = useCurrentForm();
-  const error = form.formState.errors[id];
+  const { errors } = useFormState({ control: form.control, name: id });
+  const error = errors[id];
   const config = validations[id] || {};
 
-  if (config.required === true)
-    config.required = `${config.label} is required`;
-  if (config.type === 'email')
-    config.pattern = { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, message: 'Invalid email' }
-  
   return (
-    <FloatLabel style={{ margin: '10px 0px 10px 0px' }}>
-      { config.type === 'select' ?
-        <Dropdown id={id}
-          value={form.watch(id)}
-          options={config.options || []}
-          optionLabel="name"
-          onChange={(e) => form.setValue(id, e.value)}
-          onBlur={form.register(id, config).onBlur}
-          style={{ width: '100%' }}
-        /> :
-      config.type === 'number' ?
-        <InputNumber id={id}
-          value={form.watch(id)}
-          onValueChange={(e) => form.setValue(id, e.value)}
-          onBlur={form.register(id, config).onBlur}
-        /> :
-      config.type === 'password' ?
-        <Password id={id}
-          value={form.watch(id)}
-          onChange={(e) => form.setValue(id, e.target.value)}
-          onBlur={form.register(id, config).onBlur}
-          feedback={false}
-        /> :
-      config.type === 'phone' ?
-        <InputMask id={id} mask="999 999-9999" {...form.register(id, config)} /> :
-      config.type === 'date' ?
-        <Calendar id={id}
-          value={form.watch(id)}
-          onChange={(e) => form.setValue(id, e.value)}
-          onBlur={form.register(id, config).onBlur}
-        /> :
-        <InputText id={id} {...form.register(id, config)} />
-      }
+    <FloatLabel style={{ margin: '10px 0' }}>
+      <Controller
+        name={id}
+        control={form.control}
+        rules={{
+          pattern: config.pattern,
+          required:
+            config.required === true
+              ? `${config.label} is required`
+              : config.required || false,
+        }}
+        render={({ field }) => {
+          const { value, onChange, onBlur } = field;
+
+          switch (config.type) {
+            case 'select':
+              return (
+                <Dropdown
+                  id={id}
+                  value={value}
+                  options={config.options || []}
+                  optionLabel="name"
+                  onChange={(e) => onChange(e.value)}
+                  onBlur={onBlur}
+                  style={{ width: '100%' }}
+                />
+              );
+
+            case 'number':
+              return (
+                <InputNumber
+                  id={id}
+                  value={value}
+                  onValueChange={(e) => onChange(e.value)}
+                  onBlur={onBlur}
+                />
+              );
+
+            case 'password':
+              return (
+                <Password
+                  id={id}
+                  value={value}
+                  onChange={(e) => onChange(e.target.value)}
+                  onBlur={onBlur}
+                  feedback={false}
+                  toggleMask
+                />
+              );
+
+            case 'phone':
+              return (
+                <InputMask
+                  id={id}
+                  mask="999 999-9999"
+                  value={value}
+                  onChange={(e) => onChange(e.target.value)}
+                  onBlur={onBlur}
+                />
+              );
+
+            case 'date':
+              return (
+                <Calendar
+                  id={id}
+                  value={value}
+                  onChange={(e) => onChange(e.value)}
+                  onBlur={onBlur}
+                />
+              );
+
+            default:
+              return (
+                <InputText
+                  id={id}
+                  value={value}
+                  onChange={(e) => onChange(e.target.value)}
+                  onBlur={onBlur}
+                />
+              );
+          }
+        }}
+      />
       <label htmlFor={id}>{config.label}</label>
       {error && <p className="floating-error">{String(error.message)}</p>}
     </FloatLabel>
   );
-};
+});

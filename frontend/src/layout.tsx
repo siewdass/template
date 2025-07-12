@@ -7,7 +7,6 @@ export const Layout = ({ children }: any) => {
     <Flex width={'100%'} height={'100vh'}>
       <Navigation />
       <Divider layout="vertical" className='nospacing'/>
-      
       <Flex padding={20}>
         { children }
       </Flex>

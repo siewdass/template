@@ -17,6 +17,8 @@
     "sequelize": "^6.37.7",
     "sequelize-paginate-helper": "^1.0.1",
     "sqlite3": "^5.1.7",
+    "vite-node": "^3.2.4",
+    "vite-plugin-restart": "^0.4.2",
     "winston": "^3.17.0"
   },
   "devDependencies": {

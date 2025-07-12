@@ -1,6 +1,6 @@
 import { VitePluginNode } from 'vite-plugin-node';
-
 import type { PluginOption } from 'vite'
+import VitePluginRestart from 'vite-plugin-restart'
 
 export function expressHmr(): PluginOption {
   return [
@@ -15,13 +15,18 @@ export function expressHmr(): PluginOption {
       name: 'express-hmr-logger',
       apply: 'serve',
       configureServer(server) {
-        server.watcher.on('change', (p) => {
+        server.watcher.on('all', (event,p) => {
           server.config.logger.info(
-            `(server) \x1b[32mhmr update\x1b[0m ${p.replace(server.config.root, '')}`,
+            `(server) \x1b[32mhmr ${event}\x1b[0m ${p.replace(server.config.root, '')}`,
             { timestamp: true }
           )
         })
       }
-    }
+    },
+    VitePluginRestart({
+      restart: [
+        'src/**',
+      ]
+    }),
   ]
-}
+} // mejor que express este metido aqui y no plugins 

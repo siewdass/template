@@ -1,12 +1,23 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { Fetch } from './api';
+import { showToast } from './toast';
+import { useNavigationStore } from './navigation';
+
+interface AuthConfig  {
+  endpoint: string;
+  redirect: {
+    onlogin: string;
+    onlogout: string;
+  }
+}
 
 interface AuthState {
   user: any;
   logged: boolean;
   loading: boolean;
-  error: string | null;
+  config: AuthConfig
+  setConfig: (config: AuthConfig) => void;
   login: (credentials: { email: string; password: string }) => Promise<void>;
   logout: () => void;
 }
@@ -17,58 +28,54 @@ export const useAuth = create<AuthState>()(
       user: null,
       logged: false,
       loading: false,
-      error: null,
+      config: {
+        endpoint: '',
+        redirect: {
+          onlogin: '',
+          onlogout: ''
+        }
+      },
+
+      setConfig: (config: AuthConfig) => set({ config }),
 
       login: async ({ email, password }) => {
-        set({ loading: true, error: null });
+        set({ loading: true });
         
         try {
-          const { user, token } = await Fetch({
+          const res = await Fetch({
             method: 'POST',
-            endpoint: '/user/signin',
+            endpoint: useAuth.getState().config.endpoint,
             params: { email, password }
           });
-
-          set({ 
-            user, 
-            logged: true, 
-            loading: false,
-            error: null
-          });
-
-          if (token) {
-            localStorage.setItem('token', token);
+          if (res.message) {
+            showToast({title: 'Authorization', message: res.message, error: res.error})
           }
-
-        } catch (error) {
-          set({ 
-            error: error instanceof Error ? error.message : 'Login failed', 
-            loading: false 
-          });
-          throw error;
+          if (!res.error) {
+            console.log(useAuth.getState().config.redirect.onlogin)
+            useNavigationStore.getState().navigate(
+              useAuth.getState().config.redirect.onlogin
+            );
+            set({ user: res.data.user, logged: true, loading: false });
+            if (res.token) localStorage.setItem('token', res.data.token);
+          }
+        } catch {
         }
       },
 
       logout: () => {
         localStorage.removeItem('token');
-        set({ 
-          user: null, 
-          logged: false,
-          loading: false,
-          error: null
-        });
+        set({ user: null, logged: false, loading: false });
+        useNavigationStore.getState().navigate(
+          useAuth.getState().config.redirect.onlogout
+        );
       }
     }),
+    
     {
-      name: 'auth-storage', // localStorage key
-      storage: createJSONStorage(() => localStorage), // explicitly use localStorage
-      // Persist all state properties
-      partialize: (state) => ({
-        user: state.user,
-        logged: state.logged,
-        loading: state.loading,
-        error: state.error
-      })
+      name: 'auth-storage',
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({ user: state.user, logged: state.logged, loading: state.loading }),
+      version: 1,
     }
   )
 );
