@@ -5,7 +5,7 @@ BACKEND
 - origin only on prod > cors ✅
 - database > sequelize connector ⏳
 - pagination endpoints > sequelize-paginate-helper ✅
-- crud builder ✅
+- crud builder ⏳
 - authorization middleware > express-jwt ✅
 - transaction generator and autorollback ⏳
 - validations > zod 
@@ -17,6 +17,7 @@ FRONTEND
 - caching requests > @tanstack/react-query ⏳
 - authorization with redirection > zustand ✅
 - layout with excluded routes ✅
+- crud consumer
 - fetch with toast ✅
 - error handler ✅
 - table pagination ⏳
