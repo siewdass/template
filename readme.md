@@ -23,6 +23,7 @@ FRONTEND
 - table pagination ⏳
 - grid system
 - theme swicher
+- responsive
 
 COMMON
 - zod
