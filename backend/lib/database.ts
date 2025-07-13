@@ -1,16 +1,73 @@
-import { Sequelize, DataTypes, Op, ModelStatic } from 'sequelize';
-import sph from 'sequelize-paginate-helper'
-import { Request } from 'express'
+import { Sequelize, DataTypes, Model, ModelAttributes, ModelOptions, Options, ModelStatic } from 'sequelize';
+import sph from 'sequelize-paginate-helper';
+import { Request } from 'express';
 
-export const { INTEGER, STRING, DATE, BOOLEAN, TEXT, UUID, ARRAY, BIGINT } = DataTypes
+export const { INTEGER, STRING, DATE, BOOLEAN, TEXT, UUID, ARRAY, BIGINT } = DataTypes;
 
-export const database = new Sequelize({
-  dialect: 'sqlite',
-  storage: 'database.sqlite',
-  logging: false 
-})
+let database: Sequelize;
+export const getDatabase = () => database;
 
-export const Model = database.define.bind(database)
+type DeferredModel = {
+  name: string;
+  attributes: ModelAttributes;
+  options: ModelOptions & {
+    assignTo?: (model: ModelStatic<Model>) => void;
+  };
+};
+
+const definitions: DeferredModel[] = [];
+
+export function Entity<T extends object>(
+  name: string,
+  attributes: ModelAttributes,
+  options: ModelOptions & { assignTo?: (model: ModelStatic<Model & T>) => void } = {}
+): ModelStatic<Model & T> {
+  let modelRef: ModelStatic<Model & T> | undefined;
+
+  definitions.push({
+    name,
+    attributes,
+    options: {
+      ...options,
+      assignTo: (model: ModelStatic<Model>) => {
+        modelRef = model as ModelStatic<Model & T>;
+        options.assignTo?.(modelRef);
+      },
+    },
+  });
+
+  const handler: ProxyHandler<any> = {
+    get(_, prop) {
+      if (!modelRef) throw new Error(`Model "${name}" not initialized. Call Connect() first.`);
+      return Reflect.get(modelRef, prop);
+    },
+    construct(_, args) {
+      if (!modelRef) throw new Error(`Model "${name}" not initialized. Call Connect() first.`);
+      return new (modelRef as any)(...args);
+    },
+  };
+
+  return new Proxy(function () {}, handler) as unknown as ModelStatic<Model & T>;
+}
+
+export const Connect = async (options: Options) => {
+  try {
+    database = new Sequelize(options);
+
+    await database.authenticate();
+
+    for (const def of definitions) {
+      const model = database.define(def.name, def.attributes, def.options);
+      def.options?.assignTo?.(model);
+    }
+
+    await database.sync();
+    console.log('✅ DB connected and models initialized');
+  } catch (error) {
+    console.error('❌ Failed to sync database:', error);
+  }
+  return database
+};
 
 interface Pagination {
   request: Request
@@ -30,15 +87,6 @@ export const Paginate = async (options: Pagination) => {
   const { page = 1, limit = 10 }: any = request.query;
   const p = await sph(model, page, limit, order, sort, attributes, where, filters, includes, 'id')
   return { items: p.data, total: p.totalRecords }
-}
-
-export const Connect = async () => {
-  try {
-    await database.authenticate();
-    await database.sync();
-  } catch (error) {
-    console.error('Failed to sync database:', error);
-  }
 }
 
 interface Crud {

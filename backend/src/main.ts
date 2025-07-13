@@ -5,5 +5,9 @@ export const app = Bootstrap({
   authorization: {
     exposed: [ '/', '/user/:id', '/user/createuser', '/user/getusers', '/test' ],
     secret: 'jd9812jd8912jd821jd21',
+  },
+  database: {
+    dialect: 'sqlite',
+    storage: 'database.sqlite'
   }
 })

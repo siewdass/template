@@ -2,7 +2,7 @@ import express, { ErrorRequestHandler } from 'express'
 import { Transaction } from 'sequelize'
 import cors from 'cors'
 import { expressjwt, UnauthorizedError } from 'express-jwt'
-import { Connect, database } from './database'
+import { Connect } from './database'
 
 interface Boostrap {
     origin?: string
@@ -13,12 +13,15 @@ interface Boostrap {
         exposed?: string[]
         secret: string
     }
+    database: {
+        dialect: 'sqlite' | 'mysql'
+        storage: string
+    }
 }
 
-Connect()
-
-export const Bootstrap = async ( { origin, authorization }: Boostrap ) => {
+export const Bootstrap = async ( { origin, authorization, database }: Boostrap ) => {
     const prod = (import.meta as any).env.MODE === 'production'
+    const db = await Connect({...database, logging: false})
 
     const app = express()
 
@@ -55,7 +58,7 @@ export const Bootstrap = async ( { origin, authorization }: Boostrap ) => {
 
     routes.forEach(({ path, module }) => {
         app.all(path, async (req, res) => {
-            const transaction = await database.transaction()
+            const transaction = await db.transaction()
             try {
                 console.log(`${path} ${JSON.stringify(req.body || req.query)}` )
                 const response = await (module as any).default(req, transaction)

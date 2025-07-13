@@ -3,11 +3,11 @@ BACKEND
 - file based routing > express ✅
 - authorization sign in and up > jsonwebtoken bcrypt ⏳
 - origin only on prod > cors ✅
-- database initialization > sequelize ⏳
-- pagination builder > sequelize-paginate-helper ✅
+- database initialization > sequelize ✅
+- pagination builder > sequelize-paginate-helper ⏳
 - crud builder ⏳
 - authorization middleware > express-jwt ✅
-- transaction auto commit and rollback > sequelize ⏳
+- transaction auto commit and rollback > sequelize ✅
 - try catch and error handler ✅
 - validations > zod 
 
@@ -24,7 +24,7 @@ FRONTEND
 - table pagination ⏳
 - grid system
 - theme swicher
-- responsive
+- responsive dashboard
 
 COMMON
 - zod

@@ -1,6 +1,14 @@
-import { Model, INTEGER, STRING } from '../../lib/database';
+import { Entity, INTEGER, STRING } from '../../lib/database';
 
-export const Catalog = Model<any>('Catalog',
+export interface ICatalog {
+  id: number;
+  name: string;
+  code: string;
+  type: string;
+}
+
+export const Catalog = Entity<ICatalog>(
+  'Catalog',
   {
     id: { type: INTEGER, autoIncrement: true, primaryKey: true },
     name: { type: STRING, allowNull: false },  
