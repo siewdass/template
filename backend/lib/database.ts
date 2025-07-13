@@ -1,28 +1,72 @@
-import { Sequelize, DataTypes, Model, ModelAttributes, ModelOptions, Options, ModelStatic } from 'sequelize';
+import { Sequelize, DataTypes, Model, ModelAttributes, ModelOptions, Options, ModelStatic, ModelAttributeColumnOptions, DataTypeAbstract } from 'sequelize';
 import sph from 'sequelize-paginate-helper';
 import { Request } from 'express';
 
 export const { INTEGER, STRING, DATE, BOOLEAN, TEXT, UUID, ARRAY, BIGINT } = DataTypes;
 
 let database: Sequelize;
-export const getDatabase = () => database;
+
+type CustomAttribute = ModelAttributeColumnOptions & {
+  foreignKey?: () => ModelStatic<Model>;
+  belongsTo?: () => ModelStatic<Model>;
+  hasMany?: () => ModelStatic<Model>;
+};
+
+type CustomModelAttributes = {
+  [key: string]: DataTypeAbstract | CustomAttribute;
+};
+
+type EntityOptions<T extends object> = Omit<ModelOptions, 'modelName'> & {
+  assignTo?: (model: ModelStatic<Model & T>) => void;
+  seeds?: Record<string, any>[];
+};
 
 type DeferredModel = {
   name: string;
-  attributes: ModelAttributes;
+  attributes: CustomModelAttributes;
   options: ModelOptions & {
     assignTo?: (model: ModelStatic<Model>) => void;
+    seeds?: Record<string, any>[];
   };
+  associations?: (() => void)[];
+  foreignKeys?: { field: string; target: ModelStatic<Model> | (() => ModelStatic<Model>) }[];
 };
 
 const definitions: DeferredModel[] = [];
 
 export function Entity<T extends object>(
   name: string,
-  attributes: ModelAttributes,
-  options: ModelOptions & { assignTo?: (model: ModelStatic<Model & T>) => void } = {}
+  attributes: CustomModelAttributes,
+  options: EntityOptions<T> = {}
 ): ModelStatic<Model & T> {
   let modelRef: ModelStatic<Model & T> | undefined;
+
+  const associations: (() => void)[] = [];
+  const foreignKeys: DeferredModel['foreignKeys'] = [];
+
+  for (const [field, attr] of Object.entries(attributes)) {
+    if (typeof attr !== 'object' || !attr) continue;
+
+    const col = attr as CustomAttribute;
+
+    if (col.foreignKey) {
+      foreignKeys.push({ field, target: col.foreignKey! });
+    }
+
+    if (col.belongsTo) {
+      associations.push(() => {
+        const target = col.belongsTo!(); // now guaranteed callable
+        if (modelRef) modelRef.belongsTo(target, { foreignKey: field, as: field.replace(/Id$/, '') });
+      });
+    }
+
+    if (col.hasMany) {
+      associations.push(() => {
+        const target = col.hasMany!(); // also guaranteed callable
+        if (modelRef) modelRef.hasMany(target, { foreignKey: field, as: field + 's' });
+      });
+    }
+  }
 
   definitions.push({
     name,
@@ -34,6 +78,8 @@ export function Entity<T extends object>(
         options.assignTo?.(modelRef);
       },
     },
+    associations,
+    foreignKeys,
   });
 
   const handler: ProxyHandler<any> = {
@@ -50,10 +96,10 @@ export function Entity<T extends object>(
   return new Proxy(function () {}, handler) as unknown as ModelStatic<Model & T>;
 }
 
+
 export const Connect = async (options: Options) => {
   try {
     database = new Sequelize(options);
-
     await database.authenticate();
 
     for (const def of definitions) {
@@ -61,13 +107,41 @@ export const Connect = async (options: Options) => {
       def.options?.assignTo?.(model);
     }
 
+    // set references for foreign keys AFTER models are defined
+    for (const def of definitions) {
+      if (def.foreignKeys) {
+        for (const fk of def.foreignKeys) {
+          const target = (typeof fk.target === 'function'
+            ? (fk.target as () => ModelStatic<Model>)()
+            : fk.target) as ModelStatic<Model>;          // This modifies the Sequelize model's attribute to add references
+          const attr = def.attributes[fk.field] as any;
+          attr.references = { model: target.getTableName(), key: 'id' };
+        }
+      }
+    }
+
+    // run associations AFTER references set
+    for (const def of definitions) {
+      def.associations?.forEach((fn) => fn());
+    }
+
     await database.sync();
-    console.log('✅ DB connected and models initialized');
+
+    for (const def of definitions) {
+      const model = database.model(def.name);
+      const seeds = def.options?.seeds;
+      if (Array.isArray(seeds)) {
+        for (const seed of seeds) {
+          await model.findOrCreate({ where: seed, defaults: seed });
+        }
+      }
+    }
   } catch (error) {
     console.error('❌ Failed to sync database:', error);
   }
-  return database
+  return database;
 };
+
 
 interface Pagination {
   request: Request

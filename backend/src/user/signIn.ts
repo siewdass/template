@@ -1,14 +1,14 @@
 import { Request } from 'express';
-import { User } from './model';
+import { User } from './user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-export default async function signIn(req: Request) {
+export default async (req: Request ) => {
   const { email, password } = req.body;
   
   if (!email || !password) throw { status: 400, error: 'Email and password are required' }; //zod
 
-  const user = await User.findOne({ where: { email } });
+  const user = await User.findOne({ where: { email }, include: [{ association: 'role' }] });
   if (!user) throw { status: 401, error: 'Invalid credentials' }
 
   const isMatch = await bcrypt.compare(password, user.password);

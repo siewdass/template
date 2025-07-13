@@ -1,6 +1,6 @@
 import { Request } from 'express'
 
-export default async function User(req: Request) {
+export default async (req: Request ) => {
   const { id } = req.params
   
   return {

@@ -1,8 +1,8 @@
 import { Request } from 'express'
-import { User } from './model'
+import { User } from './user'
 import { Paginate } from '../../lib/database'
 
-export default async function GetUsers(request: Request) {
+export default async (request: Request) => {
   return await Paginate({
     model: User,
     request,

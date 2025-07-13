@@ -8,13 +8,14 @@ BACKEND
 - crud builder ⏳
 - authorization middleware > express-jwt ✅
 - transaction auto commit and rollback > sequelize ✅
-- try catch and error handler ✅
+- try catch and error handler ⏳
 - validations > zod 
+- simplified entity and seeds ✅
 
 FRONTEND
 - functional programming > react ✅
 - file based routing > react-router ✅
-- hook and inputs validations > react-hook-form ✅
+- form and inputs validations > react-hook-form ✅
 - caching requests > react-query ⏳
 - authorization with redirection > zustand ✅
 - layout with excluded routes ✅

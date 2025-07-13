@@ -51,7 +51,6 @@ export const useAuth = create<AuthState>()(
             showToast({title: 'Authorization', message: res.message, error: res.error})
           }
           if (!res.error) {
-            console.log(useAuth.getState().config.redirect.onlogin)
             useNavigationStore.getState().navigate(
               useAuth.getState().config.redirect.onlogin
             );

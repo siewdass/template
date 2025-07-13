@@ -1,8 +1,8 @@
 import { Request } from 'express';
-import { User } from './model';
+import { User } from './user';
 import bcrypt from 'bcrypt';
 
-export default async function signUp(req: Request) {
+export default async (req: Request) => {
   const { name, email, password } = req.body;
   
   // Basic validation
@@ -20,7 +20,7 @@ export default async function signUp(req: Request) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // Create user with hashed password
-  await User.create({ name, email, password: hashedPassword });
+  await User.create({ name, email, password: hashedPassword, roleId: 1 });
 
   return { 
     message: 'User created successfully',
