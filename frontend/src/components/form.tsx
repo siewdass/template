@@ -44,7 +44,7 @@ export const useCurrentForm = () => {
   return context;
 }
 
-export const useCustomForm = <T extends Record<string, Config>>(fields: T): FormContextValue => {
+export const useSchema = <T extends Record<string, Config>>(fields: T): FormContextValue => {
   const defaultValues = Object.fromEntries(
     Object.entries(fields).map(([key, config]) => [key, config.default ?? ''])
   );

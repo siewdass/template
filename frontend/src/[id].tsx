@@ -1,6 +1,6 @@
-import { Input, useCustomForm, Form } from './components/form';
+import { Input, useSchema, Form } from './components/form';
 
-export default function User() {
+export default () => {
   const cities = [
     { name: 'New York', code: 'NY' },
     { name: 'Rome', code: 'RM' },
@@ -9,7 +9,7 @@ export default function User() {
     { name: 'Paris', code: 'PRS' }
   ]
 
-  const myform = useCustomForm({
+  const myform = useSchema({
     email: { label: 'Correo', type: 'email', required: true },
     username: { label: 'Usuario', type: 'text', required: true },
     phone: { label: 'Telefono', type: 'phone', required: true },

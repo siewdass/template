@@ -1,4 +1,4 @@
-import { INTEGER, STRING, Entity } from '../../lib/database';
+import { Model } from '../../lib/database';
 import { Role } from './role'
 
 export interface IUser {
@@ -8,14 +8,14 @@ export interface IUser {
   password: string;
 }
 
-export const User = Entity<IUser>(
+export const User = Model<IUser>(
   'User',
   {
-    id: { type: INTEGER, autoIncrement: true, primaryKey: true },
-    name: { type: STRING, allowNull: false },
-    email: { type: STRING, allowNull: false, unique: true },
-    password: { type: STRING, allowNull: false },
-    roleId: { type: INTEGER, allowNull: true, foreignKey: () => Role, belongsTo: () => Role },
+    id: { type: Number, autoIncrement: true, primaryKey: true },
+    name: { type: String },
+    email: { type: String, unique: true },
+    password: { type: String },
+    roleId: { type: Number, foreignKey: () => Role }
   },
   {
     tableName: 'users',

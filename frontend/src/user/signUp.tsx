@@ -1,9 +1,9 @@
 import { useAuth } from '../../lib/auth'
-import { useCustomForm, Form, Input } from '../components/form'
+import { useSchema, Form, Input } from '../components/form'
 import { Fetch } from '../../lib/api'
 
 export default function Page() {
-  const myform = useCustomForm({
+  const myform = useSchema({
     name: { label: 'Nombre', type: 'text', required: true },
     email: { label: 'Correo', type: 'email', required: true },
     password: { label: 'Contrasena', type: 'password', required: true },

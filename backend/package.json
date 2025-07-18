@@ -8,7 +8,6 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@types/bcrypt": "^5.0.2",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
@@ -17,17 +16,18 @@
     "sequelize": "^6.37.7",
     "sequelize-paginate-helper": "^1.0.1",
     "sqlite3": "^5.1.7",
-    "vite-node": "^3.2.4",
-    "vite-plugin-restart": "^0.4.2",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.0.10",
     "typescript": "~5.8.3",
     "vite": "^6.3.5",
-    "vite-plugin-node": "^5.0.1"
+    "vite-plugin-node": "^5.0.1",
+    "vite-plugin-restart": "^0.4.2"
   }
 }

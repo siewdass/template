@@ -48,10 +48,11 @@ html, body {
     right: 0.6rem;
     bottom: -1.15rem;
     background: white;
-    padding: 3px
+    padding: 3px;
+    user-select: none;
 }
 
 /* remove extra size in password input */
-.p-icon-field-right > .p-inputtext {
-    padding-right: .8rem;
+.p-icon-field-right, .p-icon-field-right > .p-inputtext {
+    width: 100%;
 }
