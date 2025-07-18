@@ -12,6 +12,6 @@
     },
     "types": ["node"]
   },
-  "include": ["src/**/*", "lib/database.ts", "lib/logger.ts", "module.d.ts"],
+  "include": ["src/**/*", "lib/database.ts", "lib/logger.ts" ],
   "exclude": ["node_modules"]
 }

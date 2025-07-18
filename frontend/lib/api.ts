@@ -11,8 +11,16 @@ interface FetchProps {
 }
 
 export const Fetch = async ({ method, endpoint, params }: FetchProps) => {
-  // agregar token y falta darle utilidad al use fetch
-  const headers = { 'Content-Type': 'application/json' };
+  // Obtener token del localStorage
+  const token = localStorage.getItem('token');
+  console.log('token', token)
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  
+  // Agregar Authorization header si existe el token
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  
   const config: RequestInit = { method, headers };
 
   if (method === 'GET') {

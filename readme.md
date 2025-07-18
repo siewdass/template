@@ -6,7 +6,7 @@ BACKEND
 - database initialization > sequelize ✅
 - pagination builder > sequelize-paginate-helper ✅
 - crud builder ⏳
-- authorization middleware > express-jwt ✅
+- authorization middleware and user logged > express-jwt ✅
 - transaction auto commit and rollback > sequelize ✅
 - try catch and error handler ✅
 - schema validations > zod ✅

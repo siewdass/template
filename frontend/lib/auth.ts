@@ -55,7 +55,7 @@ export const useAuth = create<AuthState>()(
               useAuth.getState().config.redirect.onlogin
             );
             set({ user: res.data.user, logged: true, loading: false });
-            if (res.token) localStorage.setItem('token', res.data.token);
+            if (res.data.token) localStorage.setItem('token', res.data.token);
           }
         } catch {
         }

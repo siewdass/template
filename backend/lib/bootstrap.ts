@@ -1,8 +1,18 @@
 import express, { ErrorRequestHandler } from 'express'
 import { Transaction } from 'sequelize'
 import cors from 'cors'
+import jwt from 'jsonwebtoken'
 import { expressjwt, UnauthorizedError } from 'express-jwt'
 import { Connect } from './database'
+
+declare global {
+  namespace Express {
+    interface Request {
+      auth?: any; // express-jwt pone los datos aquí por defecto
+      user?: any; // para compatibilidad
+    }
+  }
+}
 
 interface Boostrap {
     origin?: string
@@ -33,6 +43,7 @@ export const Bootstrap = async ( { origin, authorization, database }: Boostrap )
         const secret = authorization.secret
 
         app.use(expressjwt({ secret, algorithms: ['HS256'] }).unless({ path: exposed }));
+
         app.use(((err, req, res, next) => {
             if (err instanceof UnauthorizedError) {
                 return res.status(401).json({ error: true, message: 'Invalid token' })

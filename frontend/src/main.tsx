@@ -11,7 +11,7 @@ export const app = Bootstrap({
 		endpoint: '/user/signin',
 		redirect: {
 			onlogin: '/tablet',
-			onlogout: '/'
+			onlogout: '/user/signin'
 		}
   }
 })

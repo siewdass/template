@@ -1,4 +1,5 @@
 import { Sequelize, DataTypes, Model as M, ModelAttributes, ModelOptions, Options, ModelStatic, ModelAttributeColumnOptions, DataTypeAbstract } from 'sequelize';
+// @ts-ignore
 import sph from 'sequelize-paginate-helper';
 import { Request } from 'express';
 

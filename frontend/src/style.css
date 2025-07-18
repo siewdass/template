@@ -22,6 +22,10 @@ html, body {
     padding: 0px;
 }
 
+.p-panelmenu  {
+    width: 100%;
+}
+
 .p-float-label:has(input:focus) label,
 .p-float-label:has(input.p-filled) label,
 .p-float-label:has(input:-webkit-autofill) label,
@@ -56,3 +60,4 @@ html, body {
 .p-icon-field-right, .p-icon-field-right > .p-inputtext {
     width: 100%;
 }
+

@@ -81,12 +81,7 @@ export function Navigation() {
   const enrich = (items: any): any[] =>
     items.map((it: any) => {
       const key = it.label
-      const base = {
-      key,
-      label: it.label,
-      icon: it.icon,
-      template,
-      };
+      const base = { key, label: it.label, icon: it.icon, template };
       const children = it.items ? enrich(it.items) : undefined;
       const command = it.path ? () => navigate(it.path!) : undefined;
     return { ...base, ...(children ? { items: children } : { path: it.path, command }) };
@@ -95,11 +90,10 @@ export function Navigation() {
   const items = enrich(paths)
 
   return (
-    <Flex >
+    <Flex width={300}>
       <PanelMenu
         model={items}
         multiple
-        className="w-full"
         expandedKeys={expandedKeys}
         onExpandedKeysChange={setExpandedKeys}
       />

@@ -47,7 +47,7 @@ export function Table({ rowsPerPage = [2,4,6], endpoint, headers }: Table) {
   }
 
   return (
-    <Flex flexDirection="column" width={'100%'} padding={15}>
+    <Flex flexDirection="column" width={'100%'}>
       <Toolbar
         style={{ border: 'none', padding: '0.50rem' }}
         start={(
