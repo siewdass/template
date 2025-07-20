@@ -1,10 +1,10 @@
-import { Bootstrap } from '../lib/bootstrap';
-import { Layout } from './layout';
+import { Bootstrap } from '../lib/bootstrap'
+import { Layout } from './layout'
 import './style.css'
 
-export const app = Bootstrap({
+export const app = Bootstrap( {
 	layout: {
-		excluded: ['/', '/user/signin', '/user/signup', '/test'],
+		excluded: [ '/', '/user/signin', '/user/signup', '/test' ],
 		element: Layout 
 	},
 	authorization: {
@@ -13,7 +13,7 @@ export const app = Bootstrap({
 			onlogin: '/tablet',
 			onlogout: '/user/signin'
 		}
-  }
-})
+	}
+} )
 
 //'http://localhost:3001' environment variables

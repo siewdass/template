@@ -25,12 +25,11 @@ interface InputProps {
   label: string
   type: string
   options?: any
-  //format: string phone
 }
 
 const FormContext = createContext<FormContextValue | null>(null);
 
-export const useCurrentForm = () => {
+const useCurrentForm = () => {
   const context = useContext(FormContext);
   if (!context) throw new Error("Input must be used inside a Form");
   return context;
@@ -44,7 +43,7 @@ export const Form = ({ schema, children, onSubmit }: FormProps) => {
 
   return (
     <FormContext.Provider value={{ form }}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>{children}</form>
+      <form onSubmit={form.handleSubmit(onSubmit)}  >{children}</form>
     </FormContext.Provider>
   );
 };

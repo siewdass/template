@@ -11,6 +11,7 @@ BACKEND
 - try catch and error handler ✅
 - schema validations > zod ✅
 - model auto association and auto seeding > sequelize ✅
+- mail sender with jsx > react ✅
 
 FRONTEND
 - functional programming > react ✅
@@ -30,7 +31,7 @@ FRONTEND
 - skeleton
 
 COMMON
-- eslint
+- eslint ✅
 - winston
 - pnpm ✅
 - alias import
