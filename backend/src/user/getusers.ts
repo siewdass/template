@@ -3,15 +3,15 @@ import { User } from './user'
 import { Paginate } from '../../lib/database'
 
 export default async (request: Request) => {
-  //console.log(request.auth)
-  return await Paginate({
-    model: User,
-    request,
-    order: 'id',
-    sort: 'ASC',
-    attributes: [],
-    where: {},
-    filters: [],
-    includes: []
-  });
+	//console.log(request.auth)
+	return await Paginate({
+		model: User,
+		request,
+		order: 'id',
+		sort: 'ASC',
+		attributes: [],
+		where: {},
+		filters: [],
+		includes: []
+	})
 }

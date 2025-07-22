@@ -1,8 +1,13 @@
 import { Bootstrap } from '../lib/bootstrap'
+import { logger } from '../lib/logger'
 
-const env = ( import.meta as any ).env
+logger.info('check info', { id: 1, name: 'Ejemplo' })
+logger.warn('just warn', { id: 1, name: 'Ejemplo' })
+logger.error('an error', { id: 1, name: 'Ejemplo' })
 
-export const app = Bootstrap( {
+const env = (import.meta as any).env
+
+export const app = Bootstrap({
 	origin: '*',
 	authorization: {
 		exposed: [ '/', '/user/signin', '/user/signup', '/user/recover' ],
@@ -17,4 +22,4 @@ export const app = Bootstrap( {
 		user: env.VITE_MAIL_USER,
 		pass: env.VITE_MAIL_PASSWORD
 	}
-} )
+})

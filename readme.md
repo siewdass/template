@@ -32,10 +32,10 @@ FRONTEND
 
 COMMON
 - eslint ✅
-- winston
+- logger with error only on prod
 - pnpm ✅
 - alias import
-- eslint compilation checks
+- eslint before build and commit checks ✅
 - environment variables
 - i18next
 - request and response interfaces quizas con con un object

@@ -5,12 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "npm run lint && vite build",
+    "lint": "eslint .",
+    "precommit": "npm run lint"
   },
   "dependencies": {
-    "@types/nodemailer": "^6.4.17",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
@@ -22,7 +21,6 @@
     "sequelize": "^6.37.7",
     "sequelize-paginate-helper": "^1.0.1",
     "sqlite3": "^5.1.7",
-    "winston": "^3.17.0",
     "zod": "^4.0.5"
   },
   "devDependencies": {
@@ -31,6 +29,9 @@
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.0.10",
+    "@types/nodemailer": "^6.4.17",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
     "@typescript-eslint/eslint-plugin": "^8.37.0",
     "@typescript-eslint/parser": "^8.37.0",
     "eslint": "^9.31.0",

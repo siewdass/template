@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "npm run lint && vite build",
+    "lint": "eslint .",
+    "precommit": "npm run lint"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
