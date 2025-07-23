@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from 'zustand'
 
 interface NavigationStore {
   navigate: (path: string) => void;
@@ -6,8 +6,8 @@ interface NavigationStore {
 };
 
 export const useNavigationStore = create<NavigationStore>((set) => ({
-  navigate: () => {
-    throw new Error("Navigate function not initialized");
-  },
-  setNavigate: (navigate) => set({ navigate }),
-}));
+	navigate: () => {
+		throw new Error('Navigate function not initialized')
+	},
+	setNavigate: (navigate) => set({ navigate }),
+}))

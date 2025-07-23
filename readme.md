@@ -6,36 +6,33 @@ BACKEND
 - database initialization > sequelize ✅
 - pagination builder > sequelize-paginate-helper ✅
 - crud builder ⏳
-- authorization middleware and user logged > express-jwt ✅
+- authorization middleware and logged user > express-jwt ✅
 - transaction auto commit and rollback > sequelize ✅
 - try catch and error handler ✅
-- schema validations > zod ✅
 - model auto association and auto seeding > sequelize ✅
 - mail sender with jsx > react ✅
+- hide api headers > helmet ✅
 
 FRONTEND
 - functional programming > react ✅
 - file based routing > react-router ✅
-- form inputs and schema validations > react-hook-form ✅
+- form inputs > react-hook-form ✅
 - caching requests > react-query ⏳
 - authorization with redirection > zustand ✅
 - layout with excluded routes ✅
 - crud consumer
 - fetch with toast ✅
 - error handler ✅
-- table pagination ⏳
+- table pagination with skeleton ⏳
+- admin components > primereact ⏳
 - grid system
-- theme swicher
-- responsive admin components
+- light and dark theme swicher
 - socketio
-- skeleton
 
 COMMON
-- eslint ✅
-- logger with error only on prod
-- pnpm ✅
-- alias import
-- eslint before build and commit checks ✅
-- environment variables
+- lint on save and check before build > eslint ✅
+- logger with info disabled on prod ✅
+- schema validations > zod ✅
+- alias import ✅
 - i18next
-- request and response interfaces quizas con con un object
+- layers - product - structure - libraries

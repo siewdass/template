@@ -1,17 +1,16 @@
-import { Bootstrap } from '../lib/bootstrap'
+import { Bootstrap } from '@lib/bootstrap'
 import { Layout } from './layout'
-import { logger } from '../lib/logger'
+
 import './style.css'
 
-logger.info('check info', { id: 1, name: 'Ejemplo' })
-logger.warn('just warn', { id: 1, name: 'Ejemplo' })
-logger.error('an error', { id: 1, name: 'Ejemplo' })
+const env = (import.meta as any).env
 
 export const app = Bootstrap({
 	layout: {
 		excluded: [ '/', '/user/signin', '/user/signup', '/test' ],
 		element: Layout 
 	},
+	apiUrl: env.VITE_API_URL,
 	authorization: {
 		endpoint: '/user/signin',
 		redirect: {

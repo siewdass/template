@@ -9,8 +9,8 @@
     "skipLibCheck": true,
     "baseUrl": "./src",
     "paths": {
-      "@util": ["./util/index"],
-      "@util/*": ["./util/*"]
-    }
+      "@lib/*": ["../lib/*"],
+      "@components/*": ["components/*"]
+    },
   }
 }

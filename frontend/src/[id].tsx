@@ -1,9 +1,8 @@
-import { useParams } from "react-router"
+import { Route } from '@lib/types'
 
-export default () => {
-  const { id } = useParams()
+export default ({ params }: Route) => {
 
-  return (
-    <>{id}</>
-  )
+	return (
+		<>{params.id}</>
+	)
 }

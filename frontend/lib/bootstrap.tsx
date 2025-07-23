@@ -1,11 +1,13 @@
 import { ReactNode, StrictMode, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider, Navigate, useRouteError, Outlet, useNavigate } from 'react-router'
+import { createBrowserRouter, RouterProvider, Navigate, useRouteError, Outlet, useNavigate, useParams, useLocation, } from 'react-router'
 import { PrimeReactProvider } from 'primereact/api'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ToastProvider } from './toast'
 import { useNavigationStore } from './navigation'
 import { useAuth } from './auth'
+import { api } from '@lib/api'
+import { Route } from '@lib/types'
 
 import 'primereact/resources/themes/lara-light-cyan/theme.css'
 import 'primeicons/primeicons.css'
@@ -15,6 +17,7 @@ interface Bootstrap {
     element: React.ComponentType<{ children: ReactNode }>
     excluded: string[]
   }
+	apiUrl: string
   authorization: {
     endpoint: string
     redirect: {
@@ -22,6 +25,13 @@ interface Bootstrap {
       onlogout: string
     }
   }
+}
+
+const Wrapper = ({ Component }: { Component: React.ComponentType<Route> }) => {
+	const navigate = useNavigate()
+	const params = useParams()
+	const location = useLocation()
+	return <Component navigate={navigate} params={params } location={location}/>
 }
 
 const App = ({ children }: { children: ReactNode }) => {
@@ -35,7 +45,10 @@ const App = ({ children }: { children: ReactNode }) => {
 	return <>{children}</>
 }
 
-export const Bootstrap = async ({ layout, authorization }: Bootstrap) => {
+export const Bootstrap = async ({ layout, authorization, apiUrl }: Bootstrap) => {
+	if (apiUrl) {
+		api.url = apiUrl
+	}
 	useAuth.getState().setConfig(authorization)
 	const queryClient = new QueryClient()
 
@@ -58,7 +71,7 @@ export const Bootstrap = async ({ layout, authorization }: Bootstrap) => {
 				.replace('index', '')
 				.toLowerCase() || '/'
 
-			return { path, element: <Element /> }
+			return { path, element: <Wrapper Component={Element} /> }
 		})
 
 	const included = routes.filter(({ path }) => !layout.excluded.includes(path))
@@ -71,13 +84,7 @@ export const Bootstrap = async ({ layout, authorization }: Bootstrap) => {
 			element: <App><Outlet /></App>
 		},
 		{
-			element: (
-				<App>
-					<layout.element>
-						<Outlet />
-					</layout.element>
-				</App>
-			),
+			element: <App><layout.element><Outlet /></layout.element></App>,
 			errorElement: <Fallback />,
 			children: included
 		},
