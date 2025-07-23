@@ -4,6 +4,7 @@ import { expressjwt, UnauthorizedError } from 'express-jwt'
 import { dbConnect } from './database'
 import { mailConnect } from './mail'
 import { logger } from './logger'
+import helmet from 'helmet'
 
 declare global {
   namespace Express {
@@ -28,8 +29,8 @@ interface Boostrap {
 	}
 	mail?: {
 		service: string;
-   	user: string;
-    pass: string;
+   	email: string;
+    password: string;
 	}	
 }
 
@@ -38,12 +39,13 @@ export const Bootstrap = async ({ origin, authorization, database, mail }: Boost
 	const db = await dbConnect({ ...database, logging: false })
 
 	if (mail) {
-		const { service, user, pass } = mail
-		mailConnect({ service, auth: { user, pass } })
+		const { service, email, password } = mail
+		mailConnect({ service, auth: { user: email, pass: password } })
 	}
 
 	const app = express()
 
+	app.use(helmet())
 	app.use(cors({ origin: prod && origin ? origin : '*' }))
 	app.use(express.json())
 

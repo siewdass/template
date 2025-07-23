@@ -24,7 +24,7 @@ export default [{
 		"space-infix-ops": "warn",
 		"space-before-blocks": "warn",
 		"no-multiple-empty-lines": "warn",
-		"@typescript-eslint/no-explicit-any": "warn",
+		//"@typescript-eslint/no-explicit-any": "warn",
 		"no-console": ["error", { allow: [ "info"] }],
 	},
 }]

@@ -2,6 +2,7 @@ import { Sequelize, DataTypes, Model as M, ModelAttributes, ModelOptions, Option
 // @ts-ignore
 import sph from 'sequelize-paginate-helper'
 import { Request } from 'express'
+import { logger } from './logger'
 
 export const { INTEGER, STRING, DATE, BOOLEAN, TEXT, UUID, ARRAY, BIGINT } = DataTypes
 
@@ -255,8 +256,8 @@ export const dbConnect = async (options: Options) => {
 				}
 			}
 		}
-	} catch (error) {
-		console.error('❌ Failed to sync database:', error)
+	} catch (error: any) {
+		logger.error('Failed to sync database:', error)
 	}
 	return database
 }

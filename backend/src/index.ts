@@ -1,7 +1,7 @@
-import { Request } from 'express';
+import { Request } from 'express'
 
 export default async function Endpoint(req: Request) {
-  return {
-    message: 'Hello World'
-  }
+	return {
+		message: 'Hello World'
+	}
 }

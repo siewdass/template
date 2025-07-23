@@ -12,8 +12,8 @@ interface MailConfig {
   };
 }
 
-export function mailConnect( config: MailConfig ) {
-	transporter = createTransport( config )
+export function mailConnect(config: MailConfig) {
+	transporter = createTransport(config)
 }
 
 interface MailSenderProps {
@@ -23,11 +23,11 @@ interface MailSenderProps {
   element: ReactElement | ComponentType<any>;
 }
 
-export const MailSender = ( { from, to, subject, element }: MailSenderProps ) => {
+export const MailSender = ({ from, to, subject, element }: MailSenderProps) => {
 	const html = renderToString(
 		typeof element === 'function' 
-			? createElement( element )
+			? createElement(element)
 			: element
 	)
-	return transporter?.sendMail( { from, to, subject, html } )
+	return transporter?.sendMail({ from, to, subject, html })
 }

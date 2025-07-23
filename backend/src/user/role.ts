@@ -1,5 +1,5 @@
 // models/Role.ts
-import { Model } from '../../lib/database';
+import { Model } from '../../lib/database'
 
 export interface IRole {
   id: number;
@@ -7,14 +7,14 @@ export interface IRole {
 }
 
 export const Role = Model<IRole>(
-  'Role',
-  {
-    id: { type: Number, autoIncrement: true, primaryKey: true },
-    name: { type: String, unique: true },
-  },
-  {
-    tableName: 'roles',
-    timestamps: false,
-		seeds: [{ name: 'admin' }]
-  }
+	'Role',
+	{
+		id: { type: Number, autoIncrement: true, primaryKey: true },
+		name: { type: String, unique: true },
+	},
+	{
+		tableName: 'roles',
+		timestamps: false,
+		seeds: [ { name: 'admin' } ]
+	}
 )

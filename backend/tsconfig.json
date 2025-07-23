@@ -9,10 +9,11 @@
     "skipLibCheck": true,
     "baseUrl": "./src",
     "paths": {
-      "@util/*": ["./util/*"]
+      "@lib/*": ["../lib/*"],
+      "@models/*": ["models/*"]
     },
     "types": ["node"]
   },
-  "include": ["src/**/*", "lib/database.ts", "lib/logger.ts" ],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }
